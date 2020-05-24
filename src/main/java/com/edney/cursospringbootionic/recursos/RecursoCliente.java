@@ -18,7 +18,7 @@ public class RecursoCliente {
 	ServicoCliente servicoCliente;
 	
 	@GetMapping(value = "/{id}")
-	public ResponseEntity<?> buscarPeloId(@PathVariable Integer id) {
+	public ResponseEntity<Cliente> buscarPeloId(@PathVariable Integer id) {
 		Cliente obj = servicoCliente.buscarPeloId(id);
 		return ResponseEntity.ok(obj);
 	}
