@@ -35,10 +35,11 @@ public class ServicoCategoria {
 	}
 	
 	public Categoria atualizar(Categoria obj) {
-		buscarPeloId(obj.getId());
-		return repositorioCategoria.save(obj);
+		Categoria atualizarObj = buscarPeloId(obj.getId());
+		atualizarDados(atualizarObj, obj);
+		return repositorioCategoria.save(atualizarObj);
 	}
-	
+
 	public void excluir(Integer id) {
 		buscarPeloId(id);
 		try {
@@ -61,5 +62,9 @@ public class ServicoCategoria {
 	//Método auxiliar para instanciar uma categoria a partir do objeto DTO
 	public Categoria aPartirDoDTO(DTOCategoria objDTO) {
 		return new Categoria(objDTO.getId(), objDTO.getNome());
+	}
+	
+	private void atualizarDados(Categoria atualizarObj, Categoria obj) {
+		atualizarObj.setNome(obj.getNome());
 	}
 }
