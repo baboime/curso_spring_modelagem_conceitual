@@ -35,7 +35,7 @@ public class TratamentoDeErro {
 	
 	@ExceptionHandler(MethodArgumentNotValidException.class)
 	public ResponseEntity<PadraoDeErro> validacoesBasicas(MethodArgumentNotValidException e, HttpServletRequest requisicao) {
-		String erro = "Erro ao acessar o banco de dados";
+		String erro = "Erro em validação de campos";
 		HttpStatus status = HttpStatus.BAD_REQUEST;
 		ValidacaoDeErros padraoErro = new ValidacaoDeErros(Instant.now(), status.value(), erro, "Erro de validação", requisicao.getRequestURI());
 		for (FieldError x : e.getBindingResult().getFieldErrors()) {
