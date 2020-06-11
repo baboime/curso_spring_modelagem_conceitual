@@ -20,5 +20,4 @@ public class ServicoPedido {
 		
 		return obj.orElseThrow(() -> new ExcecaoObjetoNaoEncontrato("Objeto não encontrado! Id: " + id + ", Tipo: " + Pedido.class.getName()));
 	}
-	
 }
