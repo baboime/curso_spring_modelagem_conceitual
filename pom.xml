@@ -17,6 +17,7 @@
 
 	<properties>
 		<java.version>11</java.version>
+		<start-class>curso_spring_mc</start-class>
 	</properties>
 
 	<dependencies>
@@ -75,7 +76,7 @@
 	            <groupId>org.springframework.boot</groupId>
 	            <artifactId>spring-boot-maven-plugin</artifactId>
 	            <configuration>
-	                <mainClass>br.com.curso.mc.Application</mainClass>
+	                <mainClass>curso_spring_mc</mainClass>
 	            </configuration>
 	        </plugin>
 	    </plugins>
