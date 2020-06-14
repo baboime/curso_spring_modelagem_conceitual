@@ -12,6 +12,8 @@
 	<groupId>com.edney</groupId>
 	<artifactId>curso_spring_mc</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
+	<packaging>jar</packaging>
+	
 	<name>curso_spring_mc</name>
 	<description>Curso Springboot e Ionic</description>
 
@@ -60,5 +62,14 @@
 		</dependency>
 
 	</dependencies>
+	
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+			</plugin>
+		</plugins>
+	</build>
 
 </project>
