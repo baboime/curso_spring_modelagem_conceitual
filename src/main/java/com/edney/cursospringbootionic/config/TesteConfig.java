@@ -8,6 +8,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 
 import com.edney.cursospringbootionic.servicos.ServicoDB;
+import com.edney.cursospringbootionic.servicos.ServicoEmail;
+import com.edney.cursospringbootionic.servicos.ServicoEmailMock;
 
 @Configuration
 @Profile("test")
@@ -20,5 +22,10 @@ public class TesteConfig {
 	public boolean instanciarBancoDeDados() throws ParseException {
 		servicoDB.instanciarBandoDeDadosDeTestes();
 		return true;
+	}
+	
+	@Bean
+	public ServicoEmail servicoEmail() {
+		return new ServicoEmailMock();
 	}
 }

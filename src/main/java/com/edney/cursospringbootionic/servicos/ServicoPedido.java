@@ -37,6 +37,10 @@ public class ServicoPedido {
 	@Autowired
 	private ServicoCliente servicoCliente;
 	
+	@Autowired
+	private ServicoEmail servicoEmail;
+	
+	
 	public Pedido buscarPeloId(Integer id) {
 		Optional<Pedido> obj = repositorioPedido.findById(id);
 		
@@ -63,6 +67,7 @@ public class ServicoPedido {
 			ip.setPedido(obj);
 		}
 		repositorioItemPedido.saveAll(obj.getItens());
+		servicoEmail.enviarPedidoDeConfirmacaoDeEmail(obj);
 		return obj;
 	}
 }
