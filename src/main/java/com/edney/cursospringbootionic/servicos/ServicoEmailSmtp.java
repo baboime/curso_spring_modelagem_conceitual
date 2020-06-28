@@ -1,0 +1,23 @@
+package com.edney.cursospringbootionic.servicos;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.MailSender;
+import org.springframework.mail.SimpleMailMessage;
+
+public class ServicoEmailSmtp extends ServicoAbstratoEmail {
+
+	@Autowired
+	private MailSender mailSender;
+	
+	private static final Logger LOG = LoggerFactory.getLogger(ServicoEmailSmtp.class);
+	
+	@Override
+	public void enviarEmail(SimpleMailMessage msg) {
+		LOG.info("Enviando email...");
+		mailSender.send(msg);
+		LOG.info("Email enviado");
+	}
+
+}

@@ -9,6 +9,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 
 import com.edney.cursospringbootionic.servicos.ServicoDB;
+import com.edney.cursospringbootionic.servicos.ServicoEmail;
+import com.edney.cursospringbootionic.servicos.ServicoEmailSmtp;
 
 @Configuration
 @Profile("dev")
@@ -28,5 +30,10 @@ public class DesenvolvimentoConfig {
 		}
 		servicoDB.instanciarBandoDeDadosDeTestes();
 		return true;
+	}
+	
+	@Bean
+	public ServicoEmail servicoEmail() {
+		return new ServicoEmailSmtp();
 	}
 }
