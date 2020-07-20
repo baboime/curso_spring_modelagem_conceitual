@@ -8,6 +8,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort.Direction;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,6 +25,9 @@ import com.edney.cursospringbootionic.servicos.excecoes.ExcecaoObjetoNaoEncontra
 
 @Service
 public class ServicoCliente {
+	
+	@Autowired
+	private BCryptPasswordEncoder pe;
 	
 	@Autowired
 	private RepositorioCliente repositorioCliente;
@@ -71,11 +75,11 @@ public class ServicoCliente {
 	
 	//Método auxiliar para instanciar uma categoria a partir do objeto DTO
 	public Cliente aPartirDoDTO(DTOCliente objDTO) {
-		return new Cliente(objDTO.getId(), objDTO.getNome(), objDTO.getEmail(), null, null);
+		return new Cliente(objDTO.getId(), objDTO.getNome(), objDTO.getEmail(), null, null, null);
 	}
 	
 	public Cliente aPartirDoDTO(DTONovoCliente objDTO) {
-		Cliente cliente = new Cliente(null, objDTO.getNome(), objDTO.getEmail(), objDTO.getCpfOuCnpj(), TipoCliente.paraEnum(objDTO.getTipo()));
+		Cliente cliente = new Cliente(null, objDTO.getNome(), objDTO.getEmail(), objDTO.getCpfOuCnpj(), TipoCliente.paraEnum(objDTO.getTipo()), pe.encode(objDTO.getSenha()));
 		Cidade cidade = new Cidade(objDTO.getCidadeId(), null, null);
 		Endereco endereco = new Endereco(null, objDTO.getLogradouro(), objDTO.getNumero(), objDTO.getComplemento(), objDTO.getBairro(), objDTO.getCep(), cidade, cliente);
 		cliente.getEnderecos().add(endereco);
