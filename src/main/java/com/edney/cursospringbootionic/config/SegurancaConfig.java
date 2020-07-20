@@ -18,6 +18,7 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import com.edney.cursospringbootionic.seguranca.JWTFiltroDeAutenticacao;
+import com.edney.cursospringbootionic.seguranca.JWTFiltroDeAutorizacao;
 import com.edney.cursospringbootionic.seguranca.JWTUtil;
 import com.edney.cursospringbootionic.servicos.ServicoDetalhesDoUsuario;
 
@@ -55,6 +56,7 @@ public class SegurancaConfig extends WebSecurityConfigurerAdapter {
 			.antMatchers(HttpMethod.GET, PUBLIC_MATCHERS_GET).permitAll()
 			.antMatchers(PUBLIC_MATCHERS).permitAll().anyRequest().authenticated();
 		http.addFilter(new JWTFiltroDeAutenticacao(authenticationManager(), jwtUtil));
+		http.addFilter(new JWTFiltroDeAutorizacao(authenticationManager(), jwtUtil, servicoDetalhesDoUsuario));
 		http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 	}
 	
