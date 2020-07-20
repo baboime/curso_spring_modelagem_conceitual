@@ -15,11 +15,14 @@ import org.springframework.transaction.annotation.Transactional;
 import com.edney.cursospringbootionic.dominios.Cidade;
 import com.edney.cursospringbootionic.dominios.Cliente;
 import com.edney.cursospringbootionic.dominios.Endereco;
+import com.edney.cursospringbootionic.dominios.enums.Perfil;
 import com.edney.cursospringbootionic.dominios.enums.TipoCliente;
 import com.edney.cursospringbootionic.dto.DTOCliente;
 import com.edney.cursospringbootionic.dto.DTONovoCliente;
 import com.edney.cursospringbootionic.repositorios.RepositorioCliente;
 import com.edney.cursospringbootionic.repositorios.RepositorioEndereco;
+import com.edney.cursospringbootionic.seguranca.UsuarioSS;
+import com.edney.cursospringbootionic.servicos.excecoes.ExcecaoDeAutorizacao;
 import com.edney.cursospringbootionic.servicos.excecoes.ExcecaoIntegracaoBandoDeDados;
 import com.edney.cursospringbootionic.servicos.excecoes.ExcecaoObjetoNaoEncontrato;
 
@@ -36,6 +39,12 @@ public class ServicoCliente {
 	private RepositorioEndereco repositorioEndereco;
 	
 	public Cliente buscarPeloId (Integer id) {
+		
+		UsuarioSS usuario = ServicoUsuario.autenticado();
+		if (usuario == null || !usuario.possuiPerfil(Perfil.ADMINISTRADOR) && !id.equals(usuario.getId())) {
+			throw new ExcecaoDeAutorizacao("Acesso negado");
+		}
+		
 		Optional<Cliente> obj = repositorioCliente.findById(id);
 		return obj.orElseThrow(() -> new ExcecaoObjetoNaoEncontrato("Objeto não encontrado! Id: " + id + ", Tipo: " + Cliente.class.getName()));
 	}

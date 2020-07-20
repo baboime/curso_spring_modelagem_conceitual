@@ -11,6 +11,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
+import com.edney.cursospringbootionic.servicos.excecoes.ExcecaoDeAutorizacao;
 import com.edney.cursospringbootionic.servicos.excecoes.ExcecaoIntegracaoBandoDeDados;
 import com.edney.cursospringbootionic.servicos.excecoes.ExcecaoObjetoNaoEncontrato;
 
@@ -43,5 +44,14 @@ public class TratamentoDeErro {
 		}
 		return ResponseEntity.status(status).body(padraoErro);
 	}
+	
+	@ExceptionHandler(ExcecaoDeAutorizacao.class)
+	public ResponseEntity<PadraoDeErro> autorizacao(ExcecaoDeAutorizacao e, HttpServletRequest requisicao) {
+		String erro = "Acesso a informação não autorizada para o seu perfil";
+		HttpStatus status = HttpStatus.FORBIDDEN;
+		PadraoDeErro padraoErro = new PadraoDeErro(Instant.now(), status.value(), erro, e.getMessage(), requisicao.getRequestURI());
+		return ResponseEntity.status(status).body(padraoErro);
+	}
+	
 	
 }
