@@ -20,6 +20,7 @@ import com.edney.cursospringbootionic.dominios.PagamentoComCartao;
 import com.edney.cursospringbootionic.dominios.Pedido;
 import com.edney.cursospringbootionic.dominios.Produto;
 import com.edney.cursospringbootionic.dominios.enums.EstadoPagamento;
+import com.edney.cursospringbootionic.dominios.enums.Perfil;
 import com.edney.cursospringbootionic.dominios.enums.TipoCliente;
 import com.edney.cursospringbootionic.repositorios.RepositorioCategoria;
 import com.edney.cursospringbootionic.repositorios.RepositorioCidade;
@@ -129,14 +130,20 @@ public class ServicoDB {
 		Cliente cli1 = new Cliente(null, "Maria Silva", "maria@gmail.com", "36278912377", TipoCliente.PESSOA_FISICA, pe.encode("123"));
 		
 		cli1.getTelefones().addAll(Arrays.asList("27363323", "93838393"));
+		
+		Cliente cli2 = new Cliente(null, "Ana Costa", "ana@gmail.com", "31628382740", TipoCliente.PESSOA_FISICA, pe.encode("123"));
+		cli2.getTelefones().addAll(Arrays.asList("983625635", "746276123"));
+		cli2.adicionarPerfil(Perfil.ADMINISTRADOR);
 				
 		Endereco e1 = new Endereco(null, "Rua Flores", "300", "Apto 203", "Jardim", "38220834", c1, cli1);
 		Endereco e2 = new Endereco(null, "Avenida Matos", "105", "Sala 800", "Centro", "38777012", c2, cli1);
+		Endereco e3 = new Endereco(null, "Avenida Floriano", "2106", null, "Centro", "84777012", c2, cli2);
 		
 		cli1.getEnderecos().addAll(Arrays.asList(e1, e2));
+		cli2.getEnderecos().addAll(Arrays.asList(e3));
 		
-		repositorioCliente.saveAll(Arrays.asList(cli1));
-		repositorioEndereco.saveAll(Arrays.asList(e1, e2));
+		repositorioCliente.saveAll(Arrays.asList(cli1, cli2));
+		repositorioEndereco.saveAll(Arrays.asList(e1, e2, e3));
 		
 		Pedido ped1 = new Pedido(null, sdf.parse("30/09/2017 10:32"), cli1, e1);
 		Pedido ped2 = new Pedido(null, sdf.parse("10/10/2017 19:35"), cli1, e2);
