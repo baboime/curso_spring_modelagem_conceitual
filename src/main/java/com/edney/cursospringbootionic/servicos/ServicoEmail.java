@@ -4,6 +4,7 @@ import javax.mail.internet.MimeMessage;
 
 import org.springframework.mail.SimpleMailMessage;
 
+import com.edney.cursospringbootionic.dominios.Cliente;
 import com.edney.cursospringbootionic.dominios.Pedido;
 
 public interface ServicoEmail {
@@ -15,4 +16,6 @@ public interface ServicoEmail {
 	void enviarPedidoDeConfirmacaoDeEmailHtml(Pedido obj);
 	
 	void enviarEmailHtml(MimeMessage msg);
+	
+	void enviarNovaSenhaEmail(Cliente cliente, String novaSenha);
 }
