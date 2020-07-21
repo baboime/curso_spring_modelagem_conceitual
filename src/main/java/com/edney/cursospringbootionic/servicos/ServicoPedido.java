@@ -4,9 +4,13 @@ import java.util.Date;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.edney.cursospringbootionic.dominios.Cliente;
 import com.edney.cursospringbootionic.dominios.ItemPedido;
 import com.edney.cursospringbootionic.dominios.PagamentoComBoleto;
 import com.edney.cursospringbootionic.dominios.Pedido;
@@ -14,6 +18,8 @@ import com.edney.cursospringbootionic.dominios.enums.EstadoPagamento;
 import com.edney.cursospringbootionic.repositorios.RepositorioItemPedido;
 import com.edney.cursospringbootionic.repositorios.RepositorioPagamento;
 import com.edney.cursospringbootionic.repositorios.RepositorioPedido;
+import com.edney.cursospringbootionic.seguranca.UsuarioSS;
+import com.edney.cursospringbootionic.servicos.excecoes.ExcecaoDeAutorizacao;
 import com.edney.cursospringbootionic.servicos.excecoes.ExcecaoObjetoNaoEncontrato;
 
 @Service
@@ -69,5 +75,15 @@ public class ServicoPedido {
 		repositorioItemPedido.saveAll(obj.getItens());
 		servicoEmail.enviarPedidoDeConfirmacaoDeEmailHtml(obj);
 		return obj;
+	}
+	
+	public Page<Pedido> buscarPagina(Integer pagina, Integer linhasPorPagina, String ordenarPor, String tipoOrdenacao) {
+		UsuarioSS usuario = ServicoUsuario.autenticado();
+		if (usuario == null) {
+			throw new ExcecaoDeAutorizacao("Acesso negado");
+		}
+		PageRequest requisicaoPorPagina = PageRequest.of(pagina, linhasPorPagina, Direction.valueOf(tipoOrdenacao), ordenarPor);
+		Cliente cliente = servicoCliente.buscarPeloId(usuario.getId());
+		return repositorioPedido.findByCliente(cliente, requisicaoPorPagina);
 	}
 }
