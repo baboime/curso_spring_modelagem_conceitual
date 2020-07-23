@@ -1,5 +1,6 @@
 package com.edney.cursospringbootionic.servicos;
 
+import java.net.URI;
 import java.util.List;
 import java.util.Optional;
 
@@ -11,6 +12,7 @@ import org.springframework.data.domain.Sort.Direction;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.edney.cursospringbootionic.dominios.Cidade;
 import com.edney.cursospringbootionic.dominios.Cliente;
@@ -37,6 +39,9 @@ public class ServicoCliente {
 	
 	@Autowired
 	private RepositorioEndereco repositorioEndereco;
+	
+	@Autowired
+	private ServicoS3 servicoS3;
 	
 	public Cliente buscarPeloId (Integer id) {
 		
@@ -105,6 +110,10 @@ public class ServicoCliente {
 	private void atualizarDados(Cliente atualizarObj, Cliente obj) {
 		atualizarObj.setNome(obj.getNome());
 		atualizarObj.setEmail(obj.getEmail());
+	}
+	
+	public URI uploadFotoDoPerfil(MultipartFile multipartFile) {
+		return servicoS3.uploadArquivo(multipartFile);
 	}
 
 }

@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.edney.cursospringbootionic.dominios.Cliente;
@@ -82,4 +83,9 @@ public class RecursoCliente {
 		return ResponseEntity.ok().body(listaDTO);	
 	}
 	
+	@PostMapping(value="/fotoperfil")
+	public ResponseEntity<Void> uploadFotoDoPerfil(@RequestParam(name = "foto") MultipartFile foto) {
+		URI uri = servicoCliente.uploadFotoDoPerfil(foto);
+		return ResponseEntity.created(uri).build();
+	}
 }
