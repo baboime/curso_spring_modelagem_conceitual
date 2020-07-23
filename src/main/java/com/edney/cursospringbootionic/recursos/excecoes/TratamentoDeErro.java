@@ -11,6 +11,10 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
+import com.amazonaws.AmazonClientException;
+import com.amazonaws.AmazonServiceException;
+import com.amazonaws.services.s3.model.AmazonS3Exception;
+import com.edney.cursospringbootionic.servicos.excecoes.ExcecaoDeArquivo;
 import com.edney.cursospringbootionic.servicos.excecoes.ExcecaoDeAutorizacao;
 import com.edney.cursospringbootionic.servicos.excecoes.ExcecaoIntegracaoBandoDeDados;
 import com.edney.cursospringbootionic.servicos.excecoes.ExcecaoObjetoNaoEncontrato;
@@ -53,5 +57,36 @@ public class TratamentoDeErro {
 		return ResponseEntity.status(status).body(padraoErro);
 	}
 	
+	@ExceptionHandler(ExcecaoDeArquivo.class)
+	public ResponseEntity<PadraoDeErro> arquivo(ExcecaoDeArquivo e, HttpServletRequest requisicao) {
+		String erro = "Erro no tratamento do arquivo";
+		HttpStatus status = HttpStatus.BAD_REQUEST;
+		PadraoDeErro padraoErro = new PadraoDeErro(Instant.now(), status.value(), erro, e.getMessage(), requisicao.getRequestURI());
+		return ResponseEntity.status(status).body(padraoErro);
+	}
+	
+	@ExceptionHandler(AmazonServiceException.class)
+	public ResponseEntity<PadraoDeErro> servicoAmazon(AmazonServiceException e, HttpServletRequest requisicao) {
+		String erro = "Erro ao acessar o serviço da AWS";
+		HttpStatus status = HttpStatus.valueOf(e.getErrorCode());
+		PadraoDeErro padraoErro = new PadraoDeErro(Instant.now(), status.value(), erro, e.getMessage(), requisicao.getRequestURI());
+		return ResponseEntity.status(status).body(padraoErro);
+	}
+	
+	@ExceptionHandler(AmazonClientException.class)
+	public ResponseEntity<PadraoDeErro> clientAmazon(AmazonClientException e, HttpServletRequest requisicao) {
+		String erro = "Erro ao acessar o client da AWS";
+		HttpStatus status = HttpStatus.BAD_REQUEST;
+		PadraoDeErro padraoErro = new PadraoDeErro(Instant.now(), status.value(), erro, e.getMessage(), requisicao.getRequestURI());
+		return ResponseEntity.status(status).body(padraoErro);
+	}
+	
+	@ExceptionHandler(AmazonS3Exception.class)
+	public ResponseEntity<PadraoDeErro> s3Amazon(AmazonS3Exception e, HttpServletRequest requisicao) {
+		String erro = "Erro ao acessar o AWS S3";
+		HttpStatus status = HttpStatus.BAD_REQUEST;
+		PadraoDeErro padraoErro = new PadraoDeErro(Instant.now(), status.value(), erro, e.getMessage(), requisicao.getRequestURI());
+		return ResponseEntity.status(status).body(padraoErro);
+	}
 	
 }
