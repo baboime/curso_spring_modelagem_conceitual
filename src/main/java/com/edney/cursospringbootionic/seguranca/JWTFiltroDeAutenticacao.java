@@ -26,6 +26,7 @@ public class JWTFiltroDeAutenticacao extends UsernamePasswordAuthenticationFilte
 	private JWTUtil jwtUtil;
 	
 	public JWTFiltroDeAutenticacao(AuthenticationManager gerenciadorDeAutenticacao, JWTUtil jwtUtil) {
+		setAuthenticationFailureHandler(new JWTAuthenticationFailureHandler());
         this.gerenciadorDeAutenticacao = gerenciadorDeAutenticacao;
         this.jwtUtil = jwtUtil;
     }
