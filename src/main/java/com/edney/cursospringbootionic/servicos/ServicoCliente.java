@@ -113,7 +113,18 @@ public class ServicoCliente {
 	}
 	
 	public URI uploadFotoDoPerfil(MultipartFile multipartFile) {
-		return servicoS3.uploadArquivo(multipartFile);
+		
+		UsuarioSS usuario = ServicoUsuario.autenticado();
+		if(usuario == null) {
+			throw new ExcecaoDeAutorizacao("Acesso negado");
+		}
+		
+		URI uri = servicoS3.uploadArquivo(multipartFile);
+		
+		Cliente cliente = buscarPeloId(usuario.getId());
+		cliente.setUrlFotoPerfil(uri.toString());
+		repositorioCliente.save(cliente);
+		
+		return uri;
 	}
-
 }
