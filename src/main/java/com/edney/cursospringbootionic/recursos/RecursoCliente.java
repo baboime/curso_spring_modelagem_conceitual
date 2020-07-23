@@ -37,8 +37,15 @@ public class RecursoCliente {
 	@GetMapping(value = "/{id}")
 	public ResponseEntity<Cliente> buscarPeloId(@PathVariable Integer id) {
 		Cliente obj = servicoCliente.buscarPeloId(id);
-		return ResponseEntity.ok(obj);
+		return ResponseEntity.ok().body(obj);
 	}
+	
+	@GetMapping(value = "/email")
+	public ResponseEntity<Cliente> buscarPeloEmail(@RequestParam(value="value") String email) {
+		Cliente obj = servicoCliente.buscarPeloEmail(email);
+		return ResponseEntity.ok().body(obj);
+	}
+	
 	
 	@PostMapping
 	public ResponseEntity<Void> inserir(@Valid @RequestBody DTONovoCliente objDTO) {
