@@ -1,10 +1,12 @@
 package com.edney.cursospringbootionic.servicos;
 
+import java.awt.image.BufferedImage;
 import java.net.URI;
 import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -42,6 +44,12 @@ public class ServicoCliente {
 	
 	@Autowired
 	private ServicoS3 servicoS3;
+	
+	@Autowired
+	private ServicoDeImagem servicoDeImagem;
+	
+	@Value("${img.prefix.client.profile}")
+	private String prefixo;
 	
 	public Cliente buscarPeloId (Integer id) {
 		
@@ -119,12 +127,9 @@ public class ServicoCliente {
 			throw new ExcecaoDeAutorizacao("Acesso negado");
 		}
 		
-		URI uri = servicoS3.uploadArquivo(multipartFile);
+		BufferedImage imagemJpg = servicoDeImagem.obterImagemJpgDoArquivo(multipartFile);
+		String nomeDoArquivo = prefixo + usuario.getId() + ".jpg";
 		
-		Cliente cliente = buscarPeloId(usuario.getId());
-		cliente.setUrlFotoPerfil(uri.toString());
-		repositorioCliente.save(cliente);
-		
-		return uri;
+		return servicoS3.uploadArquivo(servicoDeImagem.getInputStream(imagemJpg, "jpg"), nomeDoArquivo, "imagem");
 	}
 }
