@@ -25,6 +25,10 @@ import com.edney.cursospringbootionic.dominios.Categoria;
 import com.edney.cursospringbootionic.dto.DTOCategoria;
 import com.edney.cursospringbootionic.servicos.ServicoCategoria;
 
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
+
 @RestController
 @RequestMapping(value = "/categorias")
 public class RecursoCategoria {
@@ -32,6 +36,7 @@ public class RecursoCategoria {
 	@Autowired
 	private ServicoCategoria servicoCategoria;
 	
+	@ApiOperation(value="Busca por id")
 	@GetMapping(value = "/{id}")
 	public ResponseEntity<Categoria> buscarPeloId(@PathVariable Integer id) {
 		Categoria obj = servicoCategoria.buscarPeloId(id);
@@ -39,6 +44,7 @@ public class RecursoCategoria {
 	}
 	
 	@PreAuthorize("hasAnyRole('ADMINISTRADOR')")
+	@ApiOperation(value="Insere categoria")
 	@PostMapping
 	public ResponseEntity<Void> inserir(@Valid @RequestBody DTOCategoria objDTO) {
 		Categoria obj = servicoCategoria.aPartirDoDTO(objDTO);
@@ -48,6 +54,7 @@ public class RecursoCategoria {
 	}
 	
 	@PreAuthorize("hasAnyRole('ADMINISTRADOR')")
+	@ApiOperation(value="Atualiza categoria")
 	@PutMapping(value = "/{id}")
 	public ResponseEntity<Void> atualizar(@Valid @RequestBody DTOCategoria objDTO, @PathVariable Integer id) {
 		Categoria obj = servicoCategoria.aPartirDoDTO(objDTO);
@@ -57,12 +64,17 @@ public class RecursoCategoria {
 	}
 	
 	@PreAuthorize("hasAnyRole('ADMINISTRADOR')")
+	@ApiOperation(value="Remove categoria")
+	@ApiResponses(value = {
+			@ApiResponse(code = 400, message = "Não é possível excluir uma categoria que possui produtos"),
+			@ApiResponse(code = 404, message = "Código inexistente") })
 	@DeleteMapping(value = "/{id}")
 	public ResponseEntity<Void> excluir(@PathVariable Integer id) {
 		servicoCategoria.excluir(id);
 		return ResponseEntity.noContent().build();
 	}
 	
+	@ApiOperation(value="Retorna todas categorias")
 	@GetMapping
 	public ResponseEntity<List<DTOCategoria>> buscarTudo() {
 		List<Categoria> lista = servicoCategoria.buscarTudo();
@@ -70,6 +82,7 @@ public class RecursoCategoria {
 		return ResponseEntity.ok().body(listaDTO);	
 	}
 	
+	@ApiOperation(value="Retorna todas categorias com paginação")
 	@GetMapping(value = "/pagina")
 	public ResponseEntity<Page<DTOCategoria>> buscarPagina(
 			@RequestParam(value = "pagina", defaultValue = "0") Integer pagina, 
